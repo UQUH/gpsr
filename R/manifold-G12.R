@@ -10,13 +10,17 @@ angleStiefel <- function(x, y) {
     alpha[]
 }
 
-#' PDF of MACG on G_{1,2}, unormalized, maximum as 1.
+#' (Unormalized) PDF of MACG on G_{1,2}
 #' @param a0 Angle relative to the mean; (-pi/2,pi/2].
 #' @param c Relative variance, ratio of principal variances: sigma_2^2 / sigma_1^2; [0, 1].
+#' @param type Normalization type: "max1" (default), maximum p(0) is 1;
+#'             "pdf", PDF w.r.t. the normalized invariant measure on G_{1,2}, i.e., average is 1.
 #' @return Probability density of the MACG distribution: p_{MACG}(x; diag(1, c)),
 #'         where x = (cos(a0), sin(a0)).
-pMACG12 <- function(a0, c) {
-    c / (c + (1 - c) * sin(a0)^2)
+dMACG12 <- function(a0, c, type = "max1") {
+    stopifnot(type %in% c("max1", "pdf"))
+    c0 <- switch(type, max1 = c, pdf = sqrt(c))
+    c0 / (c + (1 - c) * sin(a0)^2)
 }
 
 #' Radius of the p-th predictive interval of subspace angle.

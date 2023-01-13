@@ -10,7 +10,12 @@ normalize <- function(x) x / sqrt(sum(x^2))
 
 #' Matrix of ones
 #' @return A `dpoMatrix` of order n, all entries are 1.
-J <- function(n) tcrossprod(Matrix::Matrix(rep(1, n)))
+J <- function(n) {
+    if (n == 1) {
+        return(as(matrix(1), "dpoMatrix"))
+    }
+    tcrossprod(Matrix::Matrix(rep(1, n)))
+}
 
 #' Compute the Hadamard product of XtX and kronecker(S, 1_k 1_k^T),
 #' without computing the Kronecker product.

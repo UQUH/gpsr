@@ -139,7 +139,11 @@ gradLOODist2Evd <- function(i, Kinv, lrGKinv, VbtX, trunk) {
     Pi <- Ami %*% Sol #3ms
 
     ## Extended truncated eigen-decomposition for approximate pseudo-inverse
-    evd <- RSpectra::eigs_sym(Pi, trunk) #30ms (k EVD, 10ms; full EVD, 88ms)
+    if (trunk < ncol(svdX$u)) {
+        evd <- RSpectra::eigs_sym(Pi, trunk) #30ms (k EVD, 10ms; full EVD, 88ms)
+    } else {
+        evd <- eigen(Pi, symmetric = TRUE)
+    }
     eigs <- evd$values
     Vcheck <- evd$vectors
     Vk <- Vcheck[, seq(k)]
@@ -203,7 +207,7 @@ hSSDist <- function(len) {
 #' if vector, gradient in separable lengthscales.
 #' @note require: (XtX, VbtX; k, Jk)
 #' @export
-gSSDist <- function(len, trunk = 2*k) {
+gSSDist <- function(len, trunk = min(2*k, length(svdX$d))) {
     message(paste(c("[gradient]", "parameter: ", format(len, digits = 8)), collapse = "\t"))
     l <- ifelse(is.matrix(thetaTrain), nrow(thetaTrain), length(thetaTrain))
     np <- length(len)

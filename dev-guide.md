@@ -1,8 +1,9 @@
 # Development Guide
 
 Release:
-- `git tag <tagname>`, create tag;
-- update version in `DESCRIPTION`;
+- update version in `DESCRIPTION` and `git commit`;
+- `git tag <tagname>`, create tag for this commit;
+- `git push origin <tagname>`, push tag to GitHub;
 - `devtools::build()`, build a bundled package (.tar.gz) to parent directory.
 - `devtools::build(binary = TRUE)`, build a binary package (.tar.gz) to parent directory.
 - Create release on GitHub, upload bundled and binary packages.

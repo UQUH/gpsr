@@ -74,3 +74,11 @@ distvec <- function(x, x0) {
     }
     return(dist)
 }
+
+#' Rotation matrix by an angle.
+#' @param alpha An angle
+#' @return An order-two orthogonal matrix. When applied to a 2-dim column vector,
+#' it rotates that vector counter-clockwise by the angle alpha.
+getQ2 <- function(alpha) {
+    Matrix::Matrix(c(cos(alpha), sin(alpha), -sin(alpha), cos(alpha)), nrow = 2)
+}

@@ -7,7 +7,7 @@ library(purrr)
 
 ## Plot of unormalized PDF of MACG on G_{1,2}.
 DTpdf <- data.table::data.table(a0 = seq(-pi/2, pi/2, length.out = 201L))
-DTpdf[, p := gpsr:::pMACG12(a0, c = 0.05)]
+DTpdf[, p := gpsr:::dMACG12(a0, c = 0.05)]
 DTpdf[, plot(a0, p, type = 'l', ylim = c(0, 1), yaxs = 'i')]
 
 ## GPS Prediction ----------------------------------------------------------------------
@@ -48,7 +48,7 @@ system.time(Mpred <- vapply(thetanew, predictG12, double(2)))
 DTpred <- data.table::as.data.table(t(Mpred))
 DTpred$radius <- gpsr:::alphaPredRadius(DTpred$c, p = 0.95)
 DTpred$theta <- thetanew
-DTtrain <- data.table::data.table(alpha = theta %% pi, c = 0, radius = 0, theta = theta)
+DTtrain <- data.table::data.table(alpha = alpha %% pi, c = 0, radius = 0, theta = theta)
 DTpred <- rbind(DTpred, DTtrain)
 data.table::setkey(DTpred, theta)
 
@@ -64,8 +64,10 @@ DTpred[, lines(theta, alpha - radius, col = "red")]
 ## Make plot smooth (and normalized)
 DTpred[, c("t", "a", "r") := lapply(.SD, `/`, pi), .SDcols = c("theta", "alpha", "radius")]
 DTpred[, delta := c(0, diff(a))]
-DTpred[, dist := delta %% 1]
-DTpred[, branch := dist - delta]
+## DTpred[, dist := delta %% 1]
+DTpred[, dist := pmin(abs(delta), delta %% 1)]
+## DTpred[, branch := dist - delta]
+DTpred[, branch := ifelse(abs(delta) > dist, 1, 0)]
 DTpred[, correction := cumsum(branch)]
 DTpred[, a0 := a + correction]
 

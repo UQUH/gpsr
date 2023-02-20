@@ -31,4 +31,8 @@ alphaPredRadius <- function(c, p = 0.683) {
     atan(sqrt(c) * tan(p / 2 * pi))
 }
 
-
+#' The Riemannian distance between two planar lines represented by angles.
+distG12 <- function(alpha, beta) {
+    d <- alpha - beta
+    pmin(d %% pi, -d %% pi)
+}

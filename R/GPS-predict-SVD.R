@@ -3,7 +3,7 @@
 ## require(rsvd)
 
 ## NOTE: Remove `system.time()` and messaging when not debugging a function!
-#' 44ms, w/o messaging (k=20,l=12).
+## 	 44ms, w/o messaging (k=20,l=12).
 #' GP subspace regression prediction, posterior from equal likelihood
 #' @note Require (K, XtX, VbtX)
 #' @param thetaNew a target parameter point

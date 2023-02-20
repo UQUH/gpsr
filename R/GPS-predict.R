@@ -8,6 +8,16 @@ epsMachine <- .Machine$double.eps
 
 #' GP subspace regression prediction, eigen-decomposition version
 #' 36ms, w/o messaging (k=20,l=12); faster than SVD version!
+#' @param thetaNew A target parameter point
+#' @param thetaTrain Training parameter points
+#' @param len      Lengthscale for the GP kernel.
+#' @param t        Truncation level, defaults to k; if NULL, use thin SVD.
+#' @return a list: Vcirc, principal directions as coordinates in the global basis,
+#'                 a c-by-t matrix (more than the mean prediction);
+#'                 sigma2, principal variances, a vector of length t;
+#'                 eps2, noise variance, a scalar.
+#' @details To get the explicit principal directions, do matrix multiplication V = stdX$u %*% Vcirc.
+#' @note Require (K, XtX, VbtX)
 #' @export
 GPSubspacePredEVD <- function(thetaNew, thetaTrain, len, K, t = k) {
     l <- ncol(K)
